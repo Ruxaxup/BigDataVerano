@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package proyectobigdata.utils;
 
 import java.io.File;
@@ -12,22 +7,30 @@ import jxl.Sheet;
 import jxl.Workbook;
 import model.DataTweet;
 
-/**
- *
- * @author Ruxaxup
- */
 public class ExcelReader {
     public static final int CONTENT = 0;
     public static final int POS = 1;
     public static final int NEG = 2;
     public static final int QUERY = 3;
-
-    private List<DataTweet> leerArchivoExcel(String archivoDestino) {
-        List<DataTweet> tweetsList = new ArrayList<>();
+    private ArrayList<DataTweet> tweetsList;
+    
+    public ArrayList<DataTweet> getTweetsList(){
+        return tweetsList;
+    }
+    
+    public ExcelReader(){
+        tweetsList = new ArrayList<>();
+    }
+    
+    public void leerArchivoExcel(String archivoDestino, int sheet) {        
+        if(tweetsList == null){
+            System.err.println("Initialize array first");
+            return;
+        }
         try {
             Workbook archivoExcel = Workbook.getWorkbook(new File(
                     archivoDestino));          
-            Sheet hoja = archivoExcel.getSheet(1);
+            Sheet hoja = archivoExcel.getSheet(sheet);
             int numFilas = hoja.getRows();
             String content;
             String query;
@@ -44,18 +47,10 @@ public class ExcelReader {
                         (positive==1),
                         (negative==1),
                         query));
-                
-                //System.out.println(data);
             }
             System.out.println("Length: "+tweetsList.size());
         } catch (Exception ioe) {
             ioe.printStackTrace();
         }
-        return tweetsList;
-    }
-
-    public static void main(String arg[]) {
-        ExcelReader excel = new ExcelReader();
-        excel.leerArchivoExcel("twitter_spanish.xls");
-    }
+    }    
 }
